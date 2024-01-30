@@ -1,0 +1,12 @@
+{
+  "name": "financeapp",
+  "productName": "Finance App",
+  "version": "1.0.0",
+  "description": "App to see stocks",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Alexis Tziantopoulos",
+  "license": "MIT"
+}
