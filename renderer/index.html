@@ -7,26 +7,85 @@
     <title>Finance Apps</title>
     <link href="./output.css" rel="stylesheet">
 </head>
-<body class="text-gray-600 font-sans leading-normal">
+<body class="bg-slate-500 overflow-hidden font-sans leading-normal">
     <!-- Navigation -->
-    <nav class="bg-gray-200 p-4">
+    <nav class="backdrop-blur-xl bg-white/50 p-4">
         <div class="container mx-auto">
             <div class="flex items-center justify-between">
                 <div class="text-red-800 font-semibold text-lg">Finance App</div>
                 <div>
-                    <a href="#" class="text-gray-800 font-semibold hover:bg-gray-400 hover:text-gray-200 px-3 py-2 rounded-xl transform transition duration-300">Home</a>
-                    <a href="#" class="text-gray-800 font-semibold hover:bg-gray-400 hover:text-gray-200 px-3 py-2 rounded-xl transform transition duration-300">About</a>
-                    <a href="#" class="text-gray-800 font-semibold hover:bg-gray-400 hover:text-gray-200 px-3 py-2 rounded-xl transform transition duration-300">Contact</a>
+                    <a href="#" class="text-gray-800 font-semibold hover:backdrop-blur-xl hover:bg-white/50 hover:text-red-800 px-3 py-2 rounded-xl transform transition duration-300">Home</a>
+                    <a href="#" class="text-gray-800 font-semibold hover:backdrop-blur-xl hover:bg-white/50 hover:text-red-800 px-3 py-2 rounded-xl transform transition duration-300">About</a>
+                    <a href="#" class="text-gray-800 font-semibold hover:backdrop-blur-xl hover:bg-white/50 hover:text-red-800 px-3 py-2 rounded-xl transform transition duration-300">Contact</a>
                     
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="container mx-auto mt-8 p-4">
-        <h1 class="font-bold text-red-800 text-xl mb-2">testing  :D</h1>
-        <p>This is a basic example of a HTML page styled with Tailwind CSS.</p>
+    <div class="flex-1 flex flex-col ">
+        <!-- Header -->
+        <header class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-semibold">Dashboard</h2>
+        </header>
+
+        <!-- Dashboard Content -->
+
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+    
+            <div class="flex-grow p-4 overflow-auto">
+                <!-- Portfolio Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <!-- Individual Stock Cards -->
+                    <div class="backdrop-blur-md bg-white/40 shadow rounded-lg p-4 col-span-3">
+                        <h3 class="text-lg font-semibold mb-2">Your Stocks</h3>
+                        <!-- Stock list with current value, change, etc. -->
+                    </div>
+                    <div class="backdrop-blur-md bg-white/40 shadow rounded-lg p-4">
+                        <h3 class="text-lg font-semibold mb-2">Portfolio Summary</h3>
+                        <!-- Pie chart or graph showing portfolio distribution -->
+                    </div>
+                </div>
+    
+                <!-- Market News Section -->
+                <div class="backdrop-blur-md bg-white/40 shadow rounded-lg p-4 mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Market News</h3>
+                    <!-- List of recent market news articles or summaries -->
+                </div>
+    
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <div class="flex-grow p-4 overflow-auto">
+            <!-- Stats Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class=" backdrop-blur-md bg-white/40  shadow rounded-lg p-4">
+                    <div class="text-gray-600">Amount</div>
+                    <div class="text-3xl font-bold">24k</div>
+                </div>
+                <div class="backdrop-blur-md bg-white/40 shadow rounded-lg p-4">
+                    <div class="text-gray-600">Money</div>
+                    <div class="text-3xl font-bold">$15k</div>
+                </div>
+                <div class="backdrop-blur-md bg-white/40 shadow rounded-lg p-4">
+                    <div class="text-gray-600">Performance</div>
+                    <div class="text-3xl font-bold">78%</div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
 </body>
 </html>
