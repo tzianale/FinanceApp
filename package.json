@@ -5,8 +5,15 @@
   "description": "App to see stocks",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build:css": "tailwind build renderer/css/styles.css -o dist/styles.css"
   },
   "author": "Alexis Tziantopoulos",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "electron": "^28.2.0"
+  }
 }
