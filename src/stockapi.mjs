@@ -1,10 +1,11 @@
 import WebSocket from 'ws';
+import EventEmitter from 'events';
 
-export default class stockapi {
-    constructor(apiKey, symbols, closeAfterMs = null) {
+export default class stockapi  extends EventEmitter{
+    constructor(apiKey, symbols) {
+        super();
         this.apiKey = apiKey;
         this.symbols = symbols;
-        this.closeAfterMs = closeAfterMs;
         this.ws = null;
     }
 
@@ -16,7 +17,6 @@ export default class stockapi {
 
         this.ws.onopen = () => {
             console.log('WebSocket connection established to Twelve Data');
-
             // Send subscription message right after the connection opens
             const subscriptionMessage = {
                 action: "subscribe",
@@ -24,27 +24,18 @@ export default class stockapi {
                     symbols: this.symbols
                 }
             };
+            // Subscribe to real-time price updates for the specified symbols
             this.ws.send(JSON.stringify(subscriptionMessage));
-
-            // If specified, schedule the connection to close
-            if (this.closeAfterMs) {
-                setTimeout(() => this.close(), this.closeAfterMs);
-            }
         };
 
         this.ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log('Received update:', data);
-        
-            // Assuming the data contains an array of updates, you might iterate over them
-            // This is just an example; adjust based on the actual structure of the returned data
-            if (Array.isArray(data)) {
-                data.forEach(update => {
-                    console.log(`Symbol: ${update.symbol}, Price: ${update.price}, Timestamp: ${update.timestamp}`);
-                });
-            } else {
-                // If the data is not an array, print it directly (or handle as needed)
-                console.log(data);
+            let data;
+            try {
+                data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                this.emit('updateStock', data); // Emit an 'update' event with the parsed data
+            } catch (error) {
+                console.error('Error parsing message data:', error);
+                return;
             }
         };
 

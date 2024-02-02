@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function createMainWindow() {
     const mainWindow = new BrowserWindow({
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'), // Adjust path as necessary
+            preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             enableRemoteModule: false,
             nodeIntegration: false,
@@ -21,12 +21,21 @@ function createMainWindow() {
         width:  1000,
         height: 600,
         autoHideMenuBar: true,
-
     });
+
     console.log('main.js loaded');
     mainWindow.webContents.openDevTools();
     mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
     mainWindow.setMenu(null);
+
+
+    // Setup the client event listener inside createMainWindow to ensure mainWindow is available
+    client.on('updateStock', (data) => {
+        stockManager.updateData(data);
+        let stocks  = stockManager.stocks
+        mainWindow.webContents.send('stock-update', stocks);
+    });
+
 }
 
 
@@ -45,34 +54,17 @@ stockManager.addStock(stock4);
 // Usage
 const apiKey = '820dce8b60af47cd923c5302d5ea7cde'; // Replace with your actual Twelve Data API key
 const symbols = 'AAPL'; // Example symbols
-const client = new stockapi(apiKey, symbols, 5000); // Close after 5000 ms = 5 seconds
+const client = new stockapi(apiKey, symbols); // Close after 5000 ms = 5 seconds
 client.connect();
-
-
-
-// Handle IPC events in main process
-ipcMain.handle('getStockName', async () => {
-    return 'AAPL'; // Example: return a stock name; replace with actual logic as needed
-});
-
-ipcMain.handle('getStocks', async () => {
-    return stockManager.stocks; // Example: return stocks; replace with actual logic as needed
-});
-
-
-
-
-
-
-
-
-
-
 
 
 // When app is ready, create a new window
 app.whenReady().then(() => {
     createMainWindow();
+    
+    
+
+    
 
     // When app is activated, create a new window if there are no windows open
     app.on('activate', () => {                  

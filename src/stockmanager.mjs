@@ -1,5 +1,6 @@
 import Stock from './stock.mjs';
 
+
 export default class StockManager {
     constructor() {
         this.stocks = [];
@@ -21,6 +22,13 @@ export default class StockManager {
         const stock = this.getStock(symbol);
         if (stock) {
             stock.setPrice(newPrice);
+        }
+    }
+
+    updateData(data) {
+        const stock = this.getStock(data.symbol);
+        if (stock) {
+            stock.setPrice(data.price.toFixed(2));
         }
     }
 }
