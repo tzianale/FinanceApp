@@ -1,6 +1,5 @@
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import Stock from './src/stock.mjs';
 import StockManager from './src/stockmanager.mjs';
 import { fileURLToPath } from 'url';
 import stockapi from './src/stockapi.mjs';
@@ -42,18 +41,14 @@ function createMainWindow() {
 
 // Stocks stuff
 const stockManager = new StockManager();
-const stock1 = new Stock('AAPL', 'USD', 'NASDAQ', 150, 1000000);
-const stock2 = new Stock('GOOGL', 'USD', 'NASDAQ', 2500, 5000000);
-const stock3 = new Stock('MSFT', 'USD', 'NASDAQ', 300, 1000000);
-const stock4 = new Stock('TSLA', 'USD', 'NASDAQ', 700, 300000);
-stockManager.addStock(stock1);
-stockManager.addStock(stock2);
-stockManager.addStock(stock3);
-stockManager.addStock(stock4);
+stockManager.createNewStock('AAPL', 'USD', 'NASDAQ', 150, 1000000);
+stockManager.createNewStock('EUR/USD', 'USD', 'Forex', 2500, 2000000);
+stockManager.createNewStock('BTC/USD', 'USD', 'Crypto', 200, 3000000);
+stockManager.createNewStock('VFIAX', 'USD', 'NASDAQ', 150, 1000000);
 
 // Usage
 const apiKey = '820dce8b60af47cd923c5302d5ea7cde'; // Replace with your actual Twelve Data API key
-const symbols = 'AAPL'; // Example symbols
+const symbols = 'AAPL,EUR/USD,BTC/USD,VFIAX';
 const client = new stockapi(apiKey, symbols); // Close after 5000 ms = 5 seconds
 client.connect();
 

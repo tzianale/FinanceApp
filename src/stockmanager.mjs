@@ -6,7 +6,10 @@ export default class StockManager {
         this.stocks = [];
     }
 
-    addStock(stock) {
+
+
+    createNewStock(symbol, currency, exchange, price, marktvalue) {
+        const stock = new Stock(symbol, currency, exchange, price, marktvalue);
         this.stocks.push(stock);
     }
 
@@ -26,9 +29,11 @@ export default class StockManager {
     }
 
     updateData(data) {
-        const stock = this.getStock(data.symbol);
+        const symbol = data.symbol;
+        const price = data.price;
+        const stock = this.getStock(symbol);
         if (stock) {
-            stock.setPrice(data.price.toFixed(2));
+            stock.setPrice(price);
         }
     }
 }
