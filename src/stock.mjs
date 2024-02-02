@@ -1,14 +1,16 @@
-class Stock {
+export default class Stock {
     symbol;
     currency;
     exchange;
     price;
+    marktvalue;
 
-    constructor(symbol, currency, exchange, price) {
+    constructor(symbol, currency, exchange, price, marktvalue) {
         this.symbol = symbol;
         this.currency = currency;
         this.exchange = exchange;
         this.price = price;
+        this.marktvalue = marktvalue
     }
 
     getSymbol() {
