@@ -21,8 +21,18 @@ export default class StockManager extends EventEmitter{
         });
     }
 
+    saveData() {
+        const stockData = this.dataStorage.stocks.map(stock => ({
+            symbol: stock.symbol,
+            currency: stock.currency,
+            exchange: stock.exchange,
+            price: stock.price,
+        }));
+        console.log(stockData);
+        this.stockdatastorage.set('stocks', stockData);
+    }
+
     loadData() {
-        // Attempt to load stored stock data
         const storedStocks = this.stockdatastorage.get('stocks');
     
         if (storedStocks) {
@@ -32,6 +42,7 @@ export default class StockManager extends EventEmitter{
         } else {
             console.log('No stored stock data found, initializing with default or fetching new data...');
         }
+        console.log(this.dataStorage.stocks);
         this.emit('dataLoaded', this.dataStorage.stocks);
     }
 
@@ -47,6 +58,7 @@ export default class StockManager extends EventEmitter{
         } else {
             this.dataStorage.createNewStock(symbol, currency, exchange, price);
         }
+        this.saveData();
         }
     }
 
