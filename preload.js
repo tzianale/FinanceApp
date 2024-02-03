@@ -1,7 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-    getStockName: () => ipcRenderer.invoke('getStockName'),
     getStocks: () => ipcRenderer.invoke('getStocks'),
     onStockUpdate: (callback) => ipcRenderer.on('stock-update', (_, data) => callback(data)),
 });

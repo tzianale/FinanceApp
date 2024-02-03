@@ -9,6 +9,19 @@ export default class stockapi  extends EventEmitter{
         this.ws = null;
     }
 
+    reset = {"action": "reset"}
+
+    uüdateSubscription() {
+        const subscriptionMessage = {
+            action: "subscribe",
+            params: {
+                symbols: this.symbols
+            }
+        };
+        this.ws.send(JSON.stringify(this.reset));
+        this.ws.send(JSON.stringify(subscriptionMessage));
+    }
+
     connect() {
         // Twelve Data WebSocket endpoint for real-time price updates
         const endpoint = `wss://ws.twelvedata.com/v1/quotes/price?apikey=${this.apiKey}&symbols=${this.symbols}`;

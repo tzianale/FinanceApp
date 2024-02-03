@@ -16,9 +16,17 @@ function displayStocks(stocks) {
     stocks.forEach(stock => {
         let priceColor = 'black'; // Default color
         if (lastPrices[stock.symbol] !== undefined) {
-            priceColor = stock.price > lastPrices[stock.symbol] ? 'green' : 'red';
+            if(priceColor = stock.price > lastPrices[stock.symbol]){
+                priceColor = 'green'; // Green if price is higher than last price
+            }
+            else if(priceColor = stock.price < lastPrices[stock.symbol]){
+                priceColor = 'red'; // Red if price is lower than last price
+            }
+            else {
+            priceColor = 'black'; // Black if price is the same as last price
+            }
+            lastPrices[stock.symbol] = stock.price; // Update last price for each stock within the loop
         }
-        lastPrices[stock.symbol] = stock.price; // Update last price for each stock within the loop
 
         const stockElement = document.createElement('div');
         stockElement.classList.add('transform', 'hover:scale-105', 'transition', 'duration-300', 
@@ -27,7 +35,6 @@ function displayStocks(stocks) {
         stockElement.innerHTML = `
             <h3 class="text-xl font-bold mb-2">${stock.symbol}</h3>
             <p class="text-lg font-semibold" style="color:${priceColor};">${stock.price} ${stock.currency}</p>
-            <p class="text-sm">Marktvalue: ${stock.marktvalue} ${stock.currency}</p>
             <p class="text-sm">Exchange: ${stock.exchange}</p>
         `;
         container.appendChild(stockElement);

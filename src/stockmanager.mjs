@@ -1,39 +1,42 @@
-import Stock from './stock.mjs';
+import stockapi from './stockapi.mjs';
+import DataStorage from './datastorage.mjs';
+import EventEmitter from 'events';
 
+const apiKey = '820dce8b60af47cd923c5302d5ea7cde';
+const symbols = 'AAPL,EUR/USD,BTC/USD,VFIAX';
 
-export default class StockManager {
+export default class StockManager extends EventEmitter{
     constructor() {
-        this.stocks = [];
-    }
-
-
-
-    createNewStock(symbol, currency, exchange, price, marktvalue) {
-        const stock = new Stock(symbol, currency, exchange, price, marktvalue);
-        this.stocks.push(stock);
-    }
-
-    removeStock(symbol) {
-        this.stocks = this.stocks.filter(stock => stock.symbol !== symbol);
-    }
-
-    getStock(symbol) {
-        return this.stocks.find(stock => stock.symbol === symbol);
-    }
-
-    updatePrice(symbol, newPrice) {
-        const stock = this.getStock(symbol);
-        if (stock) {
-            stock.setPrice(newPrice);
-        }
+        super();
+        this.client = new stockapi(apiKey, symbols);
+        this.client.connect();
+        this.dataStorage = new DataStorage();
+        // Setup the client event listener inside createMainWindow to ensure mainWindow is available
+        this.client.on('updateStock', (data) => {
+            this.updateData(data);
+            this.emit('updated', this.dataStorage.stocks);
+        });
     }
 
     updateData(data) {
+        if(data.event === "price")  {
+        let currency = "USD";
         const symbol = data.symbol;
         const price = data.price;
-        const stock = this.getStock(symbol);
+        const exchange = data.exchange;
+        const stock = this.dataStorage.getStock(symbol);
         if (stock) {
-            stock.setPrice(price);
+            this.dataStorage.updatePrice(symbol, price);
+        } else {
+            this.dataStorage.createNewStock(symbol, currency, exchange, price);
+        }
         }
     }
+
+    addStock(symbol) {
+        this.client.symbols += `,${symbol}`;
+        this.client.updateSubscription();
+    }
+    
+
 }
