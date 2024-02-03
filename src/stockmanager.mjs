@@ -1,6 +1,7 @@
 import stockapi from './stockapi.mjs';
 import DataStorage from './datastorage.mjs';
 import EventEmitter from 'events';
+import Store from 'electron-store';
 
 const apiKey = '820dce8b60af47cd923c5302d5ea7cde';
 const symbols = 'AAPL,EUR/USD,VFIAX';
@@ -11,11 +12,27 @@ export default class StockManager extends EventEmitter{
         this.client = new stockapi(apiKey, symbols);
         this.client.connect();
         this.dataStorage = new DataStorage();
-        // Setup the client event listener inside createMainWindow to ensure mainWindow is available
+        this.stockdatastorage = new Store();
+        this.loadData();
+
         this.client.on('updateStock', (data) => {
             this.updateData(data);
             this.emit('updated', this.dataStorage.stocks);
         });
+    }
+
+    loadData() {
+        // Attempt to load stored stock data
+        const storedStocks = this.stockdatastorage.get('stocks');
+    
+        if (storedStocks) {
+            storedStocks.forEach(stock => {
+                this.dataStorage.createNewStock(stock.symbol, stock.currency, stock.exchange, stock.price);
+            });
+        } else {
+            console.log('No stored stock data found, initializing with default or fetching new data...');
+        }
+        this.emit('dataLoaded', this.dataStorage.stocks);
     }
 
     updateData(data) {

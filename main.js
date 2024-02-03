@@ -35,6 +35,10 @@ function createMainWindow() {
         mainWindow.webContents.send('stock-update', stocks);
     });
 
+    stockManager.on('dataLoaded', (stocks) => {
+        mainWindow.webContents.send("stock-update", stocks);
+    });
+
 }
 
 
