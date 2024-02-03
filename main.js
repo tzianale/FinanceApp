@@ -36,8 +36,11 @@ function createMainWindow() {
     });
 
     stockManager.on('dataLoaded', (stocks) => {
-        console.log("I got the data");
         mainWindow.webContents.send("stock-update", stocks);
+    });
+
+    ipcMain.on('remove-stock', (event, symbol) => {
+        stockManager.removeStock(symbol);
     });
 
 
