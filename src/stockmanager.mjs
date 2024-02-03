@@ -3,7 +3,7 @@ import DataStorage from './datastorage.mjs';
 import EventEmitter from 'events';
 
 const apiKey = '820dce8b60af47cd923c5302d5ea7cde';
-const symbols = 'AAPL,EUR/USD,BTC/USD,VFIAX';
+const symbols = 'AAPL,EUR/USD,VFIAX';
 
 export default class StockManager extends EventEmitter{
     constructor() {
@@ -22,7 +22,7 @@ export default class StockManager extends EventEmitter{
         if(data.event === "price")  {
         let currency = "USD";
         const symbol = data.symbol;
-        const price = data.price;
+        const price = data.price.toFixed(2) ;
         const exchange = data.exchange;
         const stock = this.dataStorage.getStock(symbol);
         if (stock) {
@@ -37,6 +37,6 @@ export default class StockManager extends EventEmitter{
         this.client.symbols += `,${symbol}`;
         this.client.updateSubscription();
     }
-    
+
 
 }

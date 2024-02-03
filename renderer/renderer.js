@@ -4,9 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+document.getElementById('add-stock-form').addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    const symbol = event.target.querySelector('input[type="text"]').value;
+    window.api.sendStockSymbol(symbol); // Send the symbol to the main process
+});
+
+
 let lastPrices = {}; // Object to store the last prices
-
-
 function displayStocks(stocks) {
     const container = document.getElementById('stocks-container');
     container.className = 'flex flex-row flex-wrap justify-start items-start p-4 gap-4';

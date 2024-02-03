@@ -26,7 +26,9 @@ function createMainWindow() {
     mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
     mainWindow.setMenu(null);
 
-
+    ipcMain.on('add-stock', (symbol) => {
+        console.log('Stock symbol received:', symbol);
+    });
 
     stockManager.on('updated', (stocks) => {
         mainWindow.webContents.send('stock-update', stocks);
