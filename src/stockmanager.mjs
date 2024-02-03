@@ -36,6 +36,7 @@ export default class StockManager extends EventEmitter{
     addStock(symbol) {
         this.client.symbols += `,${symbol}`;
         this.client.updateSubscription();
+        console.log('Updated symbols:', this.client.symbols);
     }
 
 

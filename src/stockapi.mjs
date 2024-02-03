@@ -11,7 +11,7 @@ export default class stockapi  extends EventEmitter{
 
     reset = {"action": "reset"}
 
-    uüdateSubscription() {
+    updateSubscription() {
         const subscriptionMessage = {
             action: "subscribe",
             params: {
@@ -30,14 +30,12 @@ export default class stockapi  extends EventEmitter{
 
         this.ws.onopen = () => {
             console.log('WebSocket connection established to Twelve Data');
-            // Send subscription message right after the connection opens
             const subscriptionMessage = {
                 action: "subscribe",
                 params: {
                     symbols: this.symbols
                 }
             };
-            // Subscribe to real-time price updates for the specified symbols
             this.ws.send(JSON.stringify(subscriptionMessage));
         };
 
@@ -45,7 +43,7 @@ export default class stockapi  extends EventEmitter{
             let data;
             try {
                 data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-                this.emit('updateStock', data); // Emit an 'update' event with the parsed data
+                this.emit('updateStock', data); 
             } catch (error) {
                 console.error('Error parsing message data:', error);
                 return;
