@@ -11,15 +11,16 @@ export default class stockapi  extends EventEmitter{
 
     reset = {"action": "reset"}
 
-    updateSubscription() {
+    updateSubscription(symbols) {
         const subscriptionMessage = {
             action: "subscribe",
             params: {
-                symbols: this.symbols
+                symbols: symbols
             }
         };
         this.ws.send(JSON.stringify(this.reset));
         this.ws.send(JSON.stringify(subscriptionMessage));
+        console.log('Subscription updated to:', symbols);
     }
 
     connect() {
@@ -36,7 +37,10 @@ export default class stockapi  extends EventEmitter{
                     symbols: this.symbols
                 }
             };
+            console.log('Subscription message:', subscriptionMessage);
             this.ws.send(JSON.stringify(subscriptionMessage));
+
+            this.emit('open');   
         };
 
         this.ws.onmessage = (event) => {
@@ -56,6 +60,7 @@ export default class stockapi  extends EventEmitter{
 
         this.ws.onclose = (event) => {
             console.log('WebSocket connection to Twelve Data closed', event.reason);
+
         };
     }
 

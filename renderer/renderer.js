@@ -25,7 +25,7 @@ function displayStocks(stocks) {
         stockElement.innerHTML = `
             <h3 class="text-xl font-bold mb-2">${stock.symbol}</h3>
             <p class="text-lg font-semibold text-black ">${stock.price} ${stock.currency}</p>
-            <p class="text-sm">Exchange: ${stock.exchange}</p>
+            <p class="text-sm"> ${stock.exchange}</p>
             <button id="remove-stock" class="remove-btn absolute top-2 right-2 hover:bg-red-400 text-red-700 hover:text-white py-1 px-2 rounded">Remove</button>
         `;
         container.appendChild(stockElement);
