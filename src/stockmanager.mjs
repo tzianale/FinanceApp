@@ -34,13 +34,13 @@ export default class StockManager extends EventEmitter{
 
     loadData() {
         const storedStocks = this.stockdatastorage.get('stocks');
-        const symbolsArray = this.symbols.split(',');
-
         const storedSymbols = this.stockdatastorage.get('symbols');
         if (storedSymbols) {
             this.symbols = storedSymbols;
-            console.log('Stored symbols found, loading...', this.symbols);
+            console.log('Stored symbols found, loading...', this.symbols);;
         }
+
+        const symbolsArray = this.symbols.split(',');
 
         if (storedStocks) {
             console.log('Stored stock data found, loading...');
@@ -83,12 +83,11 @@ export default class StockManager extends EventEmitter{
         if (!symbolsArray.includes(symbol)) {
             this.symbols += `,${symbol}`;
             console.log('Updated symbols:', this.symbols);
+            this.dataStorage.createNewStock(symbol, "", "loading", "loading");
+            console.log("this.dataStorage.stocks", this.dataStorage.stocks);
             this.loadData();
             this.client.updateSubscription();
             this.saveData();
-            if ( dataStorage.getStock(symbol) == null) {
-                dataStorage.createNewStock(symbol, "USD", "loading", "loading");
-            }
         } else {
             console.log('Symbol already exists:', symbol);
         }
@@ -101,11 +100,11 @@ export default class StockManager extends EventEmitter{
             console.log('Updated symbols:', this.symbols);
             this.dataStorage.removeStock(symbol);
             this.client.updateSubscription();
+            this.saveData();
         } else {
             // Log a message if the symbol doesn't exist
             console.log('Symbol not found:', symbol);
         }
     }
-
 
 }
