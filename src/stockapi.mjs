@@ -7,6 +7,7 @@ export default class stockapi  extends EventEmitter{
         this.apiKey = apiKey;
         this.symbols = symbols;
         this.ws = null;
+        this.heartbeatInterval = null;
     }
 
     reset = {"action": "reset"}
@@ -37,8 +38,15 @@ export default class stockapi  extends EventEmitter{
                     symbols: this.symbols
                 }
             };
-            console.log('Subscription message:', subscriptionMessage);
             this.ws.send(JSON.stringify(subscriptionMessage));
+            console.log('Subscription message:', subscriptionMessage);
+
+            this.heartbeatInterval = setInterval(() => {
+                if (this.ws.readyState === WebSocket.OPEN) {
+                    this.ws.send(JSON.stringify({action: "heartbeat"}));
+                    console.log('Sending heartbeat to keep the WebSocket connection alive');
+                }
+            }, 30000);
 
             this.emit('open');   
         };
@@ -59,8 +67,11 @@ export default class stockapi  extends EventEmitter{
         };
 
         this.ws.onclose = (event) => {
-            console.log('WebSocket connection to Twelve Data closed', event.reason);
-
+            if (this.ws) {
+                clearInterval(this.heartbeatInterval); // Stop sending heartbeat messages
+                this.ws.close(1000, 'Closing connection by client request');
+                console.log('Manually closing WebSocket connection to Twelve Data');
+            }
         };
     }
 

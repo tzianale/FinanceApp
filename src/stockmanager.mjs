@@ -14,12 +14,13 @@ export default class StockManager extends EventEmitter{
         this.dataStorage = new DataStorage();
 
         this.stockdatastorage = new Store();
-        this.loadData();
         this.loadSymbols();
+        this.loadData();
 
         this.client.on('open', () => {
             this.client.updateSubscription(this.symbols);
         });
+
 
         this.client.on('updateStock', (data) => {
             this.updateData(data);
@@ -36,13 +37,12 @@ export default class StockManager extends EventEmitter{
     }
 
     loadData() {
-        this.symbols = this.stockdatastorage.get('symbols');
         this.dataStorage.loadData(this.symbols.split(','));
         this.emit('dataLoaded', this.dataStorage.stocks);
     }
 
     updateData(data) {
-        console.log('Data received:', data);
+        console.log('Data received from stock API:', data);
         if(data.event === "price")  {
             let currency = "USD";
             const symbol = data.symbol;

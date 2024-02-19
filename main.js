@@ -45,7 +45,6 @@ function createMainWindow() {
 
 }
 
-
 // When app is ready, create a new window
 app.whenReady().then(() => {
     createMainWindow();
