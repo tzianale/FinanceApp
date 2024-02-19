@@ -21,12 +21,12 @@ function displayStocks(stocks) {
         const stockElement = document.createElement('div');
         stockElement.classList.add('transform', 'hover:scale-105', 'transition', 'duration-300', 
         'bg-[#EDF7F6]', 'shadow-lg', 'hover:shadow-xl', 'rounded-2xl', 
-        'overflow-hidden', 'p-4', 'text-[#2660A4]', 'w-60');
+        'overflow-hidden', 'p-4', 'text-[#2660A4]', 'w-60', 'group');
         stockElement.innerHTML = `
             <h3 class="text-xl font-bold mb-2">${stock.symbol}</h3>
             <p class="text-lg font-semibold text-black ">${stock.price} ${stock.currency}</p>
             <p class="text-sm"> ${stock.exchange}</p>
-            <button id="remove-stock" class="remove-btn absolute top-2 right-2 hover:bg-red-400 text-red-700 hover:text-white py-1 px-2 rounded">Remove</button>
+            <button class="remove-btn absolute top-2 right-2 hover:bg-red-400 text-red-700 hover:text-white py-1 px-2 rounded hidden group-hover:block">Remove</button>
         `;
         container.appendChild(stockElement);
 
