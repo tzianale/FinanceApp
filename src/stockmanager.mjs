@@ -8,7 +8,7 @@ const apiKey = '820dce8b60af47cd923c5302d5ea7cde';
 export default class StockManager extends EventEmitter{
     constructor() {
         super();
-        this.symbols = 'AAPL';
+        this.symbols = "";
         this.client = new stockapi(apiKey, this.symbols);
         this.client.connect();
         this.dataStorage = new DataStorage();
@@ -29,12 +29,18 @@ export default class StockManager extends EventEmitter{
             price: stock.price,
         }));
         this.stockdatastorage.set('stocks', stockData);
+        this.stockdatastorage.set('symbols', this.symbols);
     }
 
     loadData() {
         const storedStocks = this.stockdatastorage.get('stocks');
-        // Split the symbols string into an array for better comparison
         const symbolsArray = this.symbols.split(',');
+
+        const storedSymbols = this.stockdatastorage.get('symbols');
+        if (storedSymbols) {
+            this.symbols = storedSymbols;
+            console.log('Stored symbols found, loading...', this.symbols);
+        }
 
         if (storedStocks) {
             console.log('Stored stock data found, loading...');
@@ -73,18 +79,17 @@ export default class StockManager extends EventEmitter{
     }
 
     addStock(symbol) {
-        // Split the symbols string into an array to check for the presence of the symbol
         const symbolsArray = this.symbols.split(',');
-    
-        // Check if the symbol already exists in the array
         if (!symbolsArray.includes(symbol)) {
-            // If it doesn't exist, append it to the symbols string
             this.symbols += `,${symbol}`;
             console.log('Updated symbols:', this.symbols);
             this.loadData();
             this.client.updateSubscription();
+            this.saveData();
+            if ( dataStorage.getStock(symbol) == null) {
+                dataStorage.createNewStock(symbol, "USD", "loading", "loading");
+            }
         } else {
-            // Log a message if the symbol already exists
             console.log('Symbol already exists:', symbol);
         }
     }

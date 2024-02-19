@@ -34,6 +34,9 @@ function displayStocks(stocks) {
             window.api.removeStock(stock.symbol);
             container.removeChild(stockElement);
 
+
+
+            
         });
         
     });

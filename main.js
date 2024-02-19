@@ -22,7 +22,6 @@ function createMainWindow() {
     });
 
     const stockManager = new StockManager();
-    mainWindow.webContents.openDevTools();
     mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
     mainWindow.setMenu(null);
 
