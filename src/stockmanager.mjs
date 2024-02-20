@@ -26,7 +26,13 @@ export default class StockManager extends EventEmitter {
       this.updateData(data);
       this.emit("updated", this.dataStorage.stocks);
     });
+    
+    this.client.on("APIKey-Wrong", () => {
+      this.emit("APIKey-Error");
+      });
   }
+
+
 
   saveSymbols() {
     this.stockdatastorage.set("usedsymbols", this.symbols);
@@ -43,8 +49,6 @@ export default class StockManager extends EventEmitter {
   }
 
   updateData(dataArray) {
-    console.log("Data received from stock API:", dataArray);
-
     dataArray.forEach((data) => {
       // Check if each object in the array is a trade update. With Finnhub, trade updates contain the 's' field.
       if (data && data.s && data.p) {
@@ -58,13 +62,9 @@ export default class StockManager extends EventEmitter {
         } else {
           this.dataStorage.createNewStock(symbol, price, currency);
         }
-
-        this.dataStorage.saveData();
         this.saveSymbols();
-        console.log(
-          `Stock data updated for ${symbol}:`,
-          this.dataStorage.getStock(symbol)
-        );
+        this.dataStorage.saveData();
+        this.emit("updated", this.dataStorage.stocks);
       }
     });
   }
@@ -73,25 +73,27 @@ export default class StockManager extends EventEmitter {
     if (!this.symbols.includes(symbol)) {
       // Add the new symbol
       this.symbols.push(symbol);
-      this.dataStorage.createNewStock(symbol, "", "loading");
-      this.loadData(); // Assuming loadData can accept an array
-      this.saveSymbols();
+      this.dataStorage.loadData(this.symbols); // Assuming loadData can accept an array
+      this.dataStorage.createNewStock(symbol, "loading", "");
       this.client.updateSubscription(this.symbols);
-
       this.dataStorage.saveData();
+      this.saveSymbols();
+      this.emit("updated", this.dataStorage.stocks);
     }
   }
 
   removeStock(symbol) {
-    console.log("Removing stock:", this.symbols);
-    console.log("Removing stock:", symbol);
     if (this.symbols.includes(symbol)) {
-      console.log("Removing stock:", symbol);
       this.symbols = this.symbols.filter((s) => s !== symbol);
       this.dataStorage.removeStock(symbol);
       this.client.updateSubscription(this.symbols);
       this.saveSymbols();
       this.dataStorage.saveData();
     }
+  }
+
+  getStocks() {
+    this.dataStorage.loadData(this.symbols);
+    return this.dataStorage.getStocks();
   }
 }

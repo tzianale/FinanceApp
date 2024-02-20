@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog} from 'electron';
 import StockManager from './src/stockmanager.mjs';
 import { fileURLToPath } from 'url';
 
@@ -40,6 +40,21 @@ function createMainWindow() {
 
     ipcMain.on('remove-stock', (event, symbol) => {
         stockManager.removeStock(symbol);
+    });
+
+    ipcMain.on('request-stock-data', (event) => {
+        console
+        const stocks = stockManager.getStocks();
+        event.sender.send('stock-update', stocks); // Send stock data to renderer
+    });
+
+    stockManager.on('APIKey-Error', () => {
+        const { response } = dialog.showMessageBox(mainWindow, {
+            type: 'warning',
+            title: 'API Key Issue',
+            message: 'There seems to be a problem with your API key.',
+            detail: 'Please check your API key in the settings and try again.',
+          });
     });
 
 

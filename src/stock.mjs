@@ -1,7 +1,6 @@
 export default class Stock {
     symbol;
     currency;
-    exchange;
     price;
 
     constructor(symbol, currency, price) {

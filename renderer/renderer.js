@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    window.api.requestStockData();
+});
 
 
 document.getElementById('add-stock-form').addEventListener('submit', (event) => {

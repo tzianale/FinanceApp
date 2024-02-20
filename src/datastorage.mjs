@@ -1,60 +1,80 @@
-import Stock from './stock.mjs';
-import Store from 'electron-store';
+import Stock from "./stock.mjs";
+import Store from "electron-store";
 
 export default class DataStorage {
-    constructor() {
-        this.stocks = [];
-        this.stockdatastorage = new Store();
-        this.loadData();
-    }
+  constructor() {
+    this.stocks = [];
+    this.stockdatastorage = new Store();
+    this.loadData();
+  }
 
-    saveData() {
-        // Serialize stocks to save
-        const stockData = this.stocks.map(stock => ({
-            symbol: stock.symbol,
-            currency: stock.currency,
-            price: stock.price,
-        }));
-        this.stockdatastorage.set('stocks', stockData);
-    }
+  saveData() {
+    // Retrieve the currently stored stocks
+    const storedStocks = this.stockdatastorage.get("stocks") || [];
 
-    loadData(symbolsArray = []) {
-        const storedStocks = this.stockdatastorage.get('stocks') || [];
-        this.stocks = storedStocks.filter(stock => symbolsArray.length === 0 || symbolsArray.includes(stock.symbol))
-                                  .map(stock => new Stock(stock.symbol, stock.currency, stock.price));
-    }
+    const filteredStoredStocks = storedStocks.filter(
+      (stock) => stock.price && stock.price !== "loading"
+    );
 
+    // Merge current stocks with stored ones
+    const mergedStocks = [...this.stocks];
+    filteredStoredStocks.forEach((storedStock) => {
+      if (!mergedStocks.some((stock) => stock.symbol === storedStock.symbol)) {
+        mergedStocks.push(storedStock);
+      }
+    });
 
-    createNewStock(symbol, price, currency) {
-        // Ensure not to duplicate stocks
-        if (!this.getStock(symbol)) {
-            const stock = new Stock(symbol, currency, price);
-            this.stocks.push(stock);
-            this.saveData();
-        }
-    }
+    // Update the stocks in storage
+    this.stockdatastorage.set(
+      "stocks",
+      mergedStocks.map((stock) => ({
+        symbol: stock.symbol,
+        currency: stock.currency,
+        price: stock.price,
+      }))
+    );
+  }
 
-    removeStock(symbol) {
-        this.stocks = this.stocks.filter(stock => stock.symbol !== symbol);
-    }
+  loadData(symbolsArray = []) {
+    const storedStocks = this.stockdatastorage.get("stocks") || [];
+    this.stocks = storedStocks
+      .filter(
+        (stock) =>
+          symbolsArray.length === 0 || symbolsArray.includes(stock.symbol)
+      )
+      .map((stock) => new Stock(stock.symbol, stock.currency, stock.price));
+  }
 
-    getStock(symbol) {
-        return this.stocks.find(stock => stock.symbol === symbol);
+  createNewStock(symbol, price, currency) {
+    // Ensure not to duplicate stocks
+    if (!this.getStock(symbol)) {
+      const stock = new Stock(symbol, currency, price);
+      this.stocks.push(stock);
+      this.saveData();
     }
+  }
 
-    getStocks() {
-        return this.stocks;
-    }
+  removeStock(symbol) {
+    this.stocks = this.stocks.filter((stock) => stock.symbol !== symbol);
+  }
 
-    getStockSymbols() {
-        return this.stocks.map(stock => stock.symbol);
-    }
+  getStock(symbol) {
+    return this.stocks.find((stock) => stock.symbol === symbol);
+  }
 
-    updateStock(symbol, newPrice, newCurrency) {
-        const stock = this.getStock(symbol);
-        if (stock) {
-            stock.price = newPrice;
-            stock.currency = newCurrency;
-        }
+  getStocks() {
+    return this.stocks;
+  }
+
+  getStockSymbols() {
+    return this.stocks.map((stock) => stock.symbol);
+  }
+
+  updateStock(symbol, newPrice, newCurrency) {
+    const stock = this.getStock(symbol);
+    if (stock) {
+      stock.price = newPrice;
+      stock.currency = newCurrency;
     }
+  }
 }
