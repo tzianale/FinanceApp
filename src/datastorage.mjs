@@ -5,36 +5,33 @@ export default class DataStorage {
     constructor() {
         this.stocks = [];
         this.stockdatastorage = new Store();
-        this.loadData(); // Ensure this is called with appropriate arguments or adjusted to handle being called without arguments.
+        this.loadData();
     }
 
     saveData() {
+        // Serialize stocks to save
         const stockData = this.stocks.map(stock => ({
             symbol: stock.symbol,
             currency: stock.currency,
-            exchange: stock.exchange,
             price: stock.price,
         }));
         this.stockdatastorage.set('stocks', stockData);
     }
 
-    loadData(symbolsArray = []) { // Default symbolsArray to an empty array if undefined
-        const storedStocks = this.stockdatastorage.get('stocks');
-        if (storedStocks) {
-            storedStocks.forEach(stock => {
-                // Directly check this.stocks instead of this.dataStorage.getStock
-                if (symbolsArray.includes(stock.symbol) && !this.getStock(stock.symbol)){
-                    this.createNewStock(stock.symbol, stock.currency, stock.exchange, stock.price);
-                }
-            });
-        } else {
-            console.log('No stored stock data found, initializing with default or fetching new data...');
-        }
+    loadData(symbolsArray = []) {
+        const storedStocks = this.stockdatastorage.get('stocks') || [];
+        this.stocks = storedStocks.filter(stock => symbolsArray.length === 0 || symbolsArray.includes(stock.symbol))
+                                  .map(stock => new Stock(stock.symbol, stock.currency, stock.price));
     }
 
-    createNewStock(symbol, currency, exchange, price) {
-        const stock = new Stock(symbol, currency, exchange, price);
-        this.stocks.push(stock);
+
+    createNewStock(symbol, price, currency) {
+        // Ensure not to duplicate stocks
+        if (!this.getStock(symbol)) {
+            const stock = new Stock(symbol, currency, price);
+            this.stocks.push(stock);
+            this.saveData();
+        }
     }
 
     removeStock(symbol) {
@@ -45,12 +42,19 @@ export default class DataStorage {
         return this.stocks.find(stock => stock.symbol === symbol);
     }
 
-    updateStock(symbol, newPrice, newCurrency, newExchange) {
+    getStocks() {
+        return this.stocks;
+    }
+
+    getStockSymbols() {
+        return this.stocks.map(stock => stock.symbol);
+    }
+
+    updateStock(symbol, newPrice, newCurrency) {
         const stock = this.getStock(symbol);
         if (stock) {
-            stock.price = newPrice; // Assuming Stock class has these properties directly accessible
+            stock.price = newPrice;
             stock.currency = newCurrency;
-            stock.exchange = newExchange;
         }
     }
 }
