@@ -1,8 +1,10 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     window.api.onStockUpdate((stocks) => {
         displayStocks(stocks);
     });
 });
+
 
 
 document.getElementById('add-stock-form').addEventListener('submit', (event) => {
