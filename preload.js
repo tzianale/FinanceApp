@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('api', {
     sendStockSymbol: (symbol) => ipcRenderer.send('add-stock', symbol),
     removeStock: (symbol) => ipcRenderer.send('remove-stock', symbol),
     requestStockData: () => ipcRenderer.send('request-stock-data'),
+    setAPIKey: (key) => ipcRenderer.send('set-api-key', key)
 });
 
 console.log('preload.js loaded');

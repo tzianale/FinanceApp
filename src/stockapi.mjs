@@ -33,6 +33,12 @@ export default class StockAPI extends EventEmitter {
     console.log("Subscription updated to:", symbols);
   }
 
+  setAPIKey(key) {
+    this.apiKey = key;
+    this.close();
+    this.connect();
+  }
+
   connect() {
     const endpoint = `wss://ws.finnhub.io?token=${this.apiKey}`;
     this.ws = new WebSocket(endpoint);

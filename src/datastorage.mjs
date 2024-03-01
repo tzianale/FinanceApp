@@ -40,7 +40,7 @@ export default class DataStorage {
     this.stocks = storedStocks
       .filter(
         (stock) =>
-          symbolsArray.length === 0 || symbolsArray.includes(stock.symbol)
+          symbolsArray.includes(stock.symbol)
       )
       .map((stock) => new Stock(stock.symbol, stock.currency, stock.price));
   }

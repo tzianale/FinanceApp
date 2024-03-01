@@ -3,7 +3,6 @@ import DataStorage from "./datastorage.mjs";
 import EventEmitter from "events";
 import Store from "electron-store";
 
-const apiKey = "cna94r9r01qjv5ip8upgcna94r9r01qjv5ip8uq0";
 
 export default class StockManager extends EventEmitter {
   constructor() {
@@ -12,10 +11,13 @@ export default class StockManager extends EventEmitter {
     this.dataStorage = new DataStorage();
 
     this.stockdatastorage = new Store();
+    this.apiKeystorage = new Store();
     this.loadSymbols(); //getstocksymbols
     this.loadData();
 
-    this.client = new stockapi(apiKey, this.symbols);
+    this.apiKey = this.apiKeystorage.get("apikey") || "";
+
+    this.client = new stockapi(this.apiKey, this.symbols);
     this.client.connect();
 
     this.client.on("open", () => {
@@ -48,14 +50,17 @@ export default class StockManager extends EventEmitter {
     this.emit("dataLoaded", this.dataStorage.stocks);
   }
 
+  setAPIKey(key) { 
+    console.log("API Key received:", key);
+  }
+
   updateData(dataArray) {
     dataArray.forEach((data) => {
-      // Check if each object in the array is a trade update. With Finnhub, trade updates contain the 's' field.
       if (data && data.s && data.p) {
         console.log("Trade update received for symbol:", data.s);
-        let currency = "USD"; // Currency is assumed to be USD. Finnhub does not provide currency in trade updates.
-        const symbol = data.s; // Symbol of the stock
-        const price = parseFloat(data.p).toFixed(2); // Price of the trade
+        let currency = "USD";
+        const symbol = data.s;
+        const price = parseFloat(data.p).toFixed(2);
 
         if (this.dataStorage.getStock(symbol)) {
           this.dataStorage.updateStock(symbol, price, currency);
@@ -71,7 +76,6 @@ export default class StockManager extends EventEmitter {
 
   addStock(symbol) {
     if (!this.symbols.includes(symbol)) {
-      // Add the new symbol
       this.symbols.push(symbol);
       this.dataStorage.loadData(this.symbols); // Assuming loadData can accept an array
       this.dataStorage.createNewStock(symbol, "loading", "");
@@ -95,5 +99,12 @@ export default class StockManager extends EventEmitter {
   getStocks() {
     this.dataStorage.loadData(this.symbols);
     return this.dataStorage.getStocks();
+  }
+
+  setAPIKey(key) {
+    console.log("API Key received:", key);
+    this.apiKey = key;
+    this.client.setAPIKey(key);
+    this.apiKeystorage.set("apikey", key);
   }
 }

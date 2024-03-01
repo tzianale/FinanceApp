@@ -42,25 +42,22 @@
         <h3 class="text-center text-[#2660A4] font-bold text-2xl mb-4">
           Settings
         </h3>
-        <form id="settings-form" class="flex flex-col gap-4">
-          <label for="api-key" class="text-gray-700 font-medium"
-            >API Key:</label
-          >
+        <form id="api-key-form" class="flex flex-col gap-4">
           <input
-            id="api-key"
             type="text"
-            class="rounded-lg p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2660A4] focus:border-transparent"
-            placeholder="Enter your API Key"
+            placeholder="API Key"
+            class="form-input px-4 py-2 rounded-md border-2 border-gray-200"
+            required
           />
           <button
             type="submit"
-            class="bg-[#2660A4] text-white font-semibold py-2 rounded-lg transition duration-300 hover:bg-[#1E4E8C]"
+            class="bg-[#2660A4] hover:bg-blue-300 text-white font-bold py-2 rounded-md transition duration-300"
           >
             Save
           </button>
         </form>
       </div>
     </div>
-    <script src="renderer.js"></script>
+    <script src="settings.js"></script>
   </body>
 </html>
