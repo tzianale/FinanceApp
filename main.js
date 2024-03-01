@@ -20,9 +20,6 @@ function createMainWindow() {
     height: 600,
     autoHideMenuBar: true,
   });
-
-  // Activate console
-  mainWindow.webContents.openDevTools();
   
 
   const stockManager = new StockManager();
