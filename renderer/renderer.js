@@ -1,25 +1,40 @@
-
+/**
+ * Sets up event listeners once the DOM content is fully loaded.
+ */
 document.addEventListener('DOMContentLoaded', () => {
+    /**
+     * Registers a callback to handle stock updates.
+     * @param {Array} stocks - An array of updated stock data.
+     */
     window.api.onStockUpdate((stocks) => {
         displayStocks(stocks);
     });
 });
 
+/**
+ * Requests initial stock data from the main process as soon as the DOM is ready.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     window.api.requestStockData();
 });
 
-
+/**
+ * Adds an event listener to the form used for adding a stock symbol.
+ * @param {Event} event - The event object representing the form submission event.
+ */
 document.getElementById('add-stock-form').addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
     const symbol = event.target.querySelector('input[type="text"]').value;
-    window.api.sendStockSymbol(symbol); // Send the symbol to the main process
+    window.api.sendStockSymbol(symbol);
 });
 
+/**
+ * Displays stock information dynamically in the DOM.
+ * @param {Array} stocks - An array of stock objects containing symbol, price, and currency.
+ */
 function displayStocks(stocks) {
     const container = document.getElementById('stocks-container');
     container.className = 'flex flex-row flex-wrap justify-start items-start p-4 gap-4';
-
     container.innerHTML = '';
 
     stocks.forEach(stock => {
@@ -37,13 +52,6 @@ function displayStocks(stocks) {
         stockElement.querySelector('.remove-btn').addEventListener('click', function() {
             window.api.removeStock(stock.symbol);
             container.removeChild(stockElement);
-
-
-
-            
         });
-        
     });
 }
-
-
