@@ -6,16 +6,27 @@
   "description": "App to see stocks",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "build:css": "tailwind build renderer/css/styles.css -o dist/styles.css"
+    "start": "electron-forge start",
+    "build:css": "tailwind build renderer/css/styles.css -o dist/styles.css",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "author": "Alexis Tziantopoulos",
   "license": "MIT",
   "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "^28.3.3",
     "tailwindcss": "^3.4.1"
   },
   "dependencies": {
-    "electron": "^28.2.0",
+    "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.1.0",
     "ws": "^8.16.0"
   }
